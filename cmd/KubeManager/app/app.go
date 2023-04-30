@@ -1,12 +1,7 @@
 package app
 
-import (
-	"net/http"
-	"time"
-)
-
 type App struct {
-	Server *http.Server
+	Ports []int
 }
 
 type User struct {
@@ -20,16 +15,7 @@ type User struct {
 }
 
 func NewApp() *App {
-
-	mux := makeHandlers()
-
 	return &App{
-		Server: &http.Server{
-			Addr:           "localhost:8085",
-			Handler:        mux,
-			ReadTimeout:    10 * time.Second,
-			WriteTimeout:   10 * time.Second,
-			MaxHeaderBytes: 1 << 20,
-		},
+		Ports: []int{},
 	}
 }

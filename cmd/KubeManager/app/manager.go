@@ -9,18 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-
-	"k8s.io/client-go/kubernetes"
 )
-
-type Manager struct {
-	KubeClient *kubernetes.Clientset
-	HelmChart  string
-}
-
-type Response struct {
-	PathToHelm string `json:"pathToHelm"`
-}
 
 func getUsersRequest(req *http.Request) (*User, error) {
 	body, err := ioutil.ReadAll(req.Body)
@@ -92,10 +81,26 @@ func getHelmPath(usersRequest *User) (string, error) {
 	}
 
 	os.Remove(tarFilename)
-	return "", nil
+	return "./" + usersRequest.Name + "/helm", nil
 	// return response.PathToHelm, nil
 }
 
-func getKubeClient(pathToHelm string) *Manager {
-	return &Manager{}
+func applyHelm(app *User, pathToHelm string) error {
+	cmd := exec.Command("helm", "upgrade", app.Name, pathToHelm,
+		"--install", "-n", app.UserName, "--set",
+		"image.fullImage=xgolis/"+app.Name+":latest", "--set",
+		"app.namespace="+app.UserName, "--force")
+
+	cmd.Dir = "./" + app.Name
+
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	// Run the command and wait for it to finish
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	os.RemoveAll(app.Name)
+	return nil
 }

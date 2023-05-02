@@ -55,7 +55,7 @@ jobs:
           kubectl config set-cluster kubernetes --insecure-skip-tls-verify
           kubectl get pods --namespace=${{env.NAMESPACE}}
 
-          helm upgrade ${{env.APPNAME}} ./${{env.APPNAME}} \
+          helm upgrade ${{env.APPNAME}} ./${{env.APPNAME}}/helm \
             --install -n ${{env.NAMESPACE}} --version ${{ github.sha }} \
             --set "image.fullImage=${{ secrets.DOCKERHUB_USERNAME }}/${{env.APPNAME}}:latest" \
             --set "app.namespace=${{env.NAMESPACE}}" --force \

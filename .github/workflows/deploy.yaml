@@ -57,7 +57,7 @@ jobs:
 
           helm upgrade ${{env.APPNAME}} ./helm \
             --install -n ${{env.NAMESPACE}} --version ${{ github.sha }} \
-            --set "image.fullImage=${{ secrets.DOCKERHUB_USERNAME }}/${{env.APPNAME}}:latest" \
+            --set "image.fullImage=${{ secrets.DOCKERHUB_USERNAME }}/${{env.APPNAME}}:lates" \
             --set "app.namespace=${{env.NAMESPACE}}" --force \
             --set "app.examplePassword=pass"
         # --set-file "app.exampleConfig=/path/to/config"

@@ -91,7 +91,7 @@ func applyHelm(app *User, pathToHelm string) error {
 		"image.fullImage=xgolis/"+app.Name+":latest", "--set",
 		"app.namespace="+app.UserName, "--force")
 
-	cmd.Dir = "./" + app.Name
+	cmd.Dir = "."
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

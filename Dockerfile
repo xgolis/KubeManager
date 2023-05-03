@@ -7,7 +7,7 @@ RUN cd cmd/KubeManager && \
     cd ../..
 
 FROM xgolis/deployimage:latest
-COPY --from=build /app/KubeManager .
+COPY --from=build /app/KubeManager ~
 
 RUN chmod 400 /root/.ssh/id_rsa
 RUN ssh-keyscan 35.240.30.14 >> /root/.ssh/known_hosts
@@ -17,6 +17,6 @@ RUN kubectl config set-cluster kubernetes --server=https://35.240.30.14:6443
 RUN kubectl config set-cluster kubernetes --insecure-skip-tls-verify
 
 EXPOSE 8085
-ENTRYPOINT [ "./KubeManager" ]
+ENTRYPOINT [ "~/KubeManager" ]
 
           

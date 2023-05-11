@@ -89,7 +89,8 @@ func applyHelm(app *User, pathToHelm string) error {
 	cmd := exec.Command("helm", "upgrade", app.Name, pathToHelm,
 		"--install", "-n", app.UserName, "--set",
 		"image.fullImage=xgolis/"+app.Name+":latest", "--set",
-		"app.namespace="+app.UserName, "--force")
+		"app.namespace="+app.UserName, "--force",
+		"--create-namespace")
 
 	cmd.Dir = "."
 

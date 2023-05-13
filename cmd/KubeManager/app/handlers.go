@@ -1,10 +1,15 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 )
+
+type Response struct {
+	Message string `json:"message"`
+}
 
 func (a *App) MakeHandlers() *http.ServeMux {
 	mux := *http.NewServeMux()
@@ -13,10 +18,30 @@ func (a *App) MakeHandlers() *http.ServeMux {
 	// a.Server.HandleFunc("/", getGit(w http.ResponseWriter, req *http.Request)})
 }
 
+func sendError(w *http.ResponseWriter, err error) {
+	(*w).Header().Set("Content-Type", "application/json")
+
+	status := Response{
+		Message: err.Error(),
+	}
+	fmt.Print(status.Message)
+	statusJson, err := json.Marshal(status)
+	if err != nil {
+		http.Error(*w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	(*w).Write(statusJson)
+}
+
 func (a *App) initialDeployment(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
 	usersRequest, err := getUsersRequest(req)
 	if err != nil {
-		fmt.Fprintf(w, "error reading users request: %v", err)
+		sendError(&w, fmt.Errorf("error reading users request: %v\n", err))
 		return
 	}
 
@@ -24,15 +49,27 @@ func (a *App) initialDeployment(w http.ResponseWriter, req *http.Request) {
 
 	helmPath, err := getHelmPath(usersRequest)
 	if err != nil {
-		fmt.Fprintf(w, "error while getting helm: %v", err)
+		sendError(&w, fmt.Errorf("error while getting helm: %v\n", err))
 		return
 	}
 
 	err = applyHelm(usersRequest, helmPath)
 	if err != nil {
-		fmt.Fprintf(w, "error while applying: %v", err)
+		sendError(&w, fmt.Errorf("error while applying: %v\n", err))
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	status := Response{
+		Message: "The application deployed successfully\nThe application is accessible at 35.240.30.15:" + usersRequest.Port,
+	}
+	statusJson, err := json.Marshal(status)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Write(statusJson)
 }
 
 func (a *App) findAvailablePort() string {

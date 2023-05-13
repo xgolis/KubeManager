@@ -29,13 +29,11 @@ func getUsersRequest(req *http.Request) (*User, error) {
 func getHelmPath(usersRequest *User) (string, error) {
 	posturl := "http://10.102.243.209:8081"
 
-	// ziskaj available port
 	body, err := json.Marshal(usersRequest)
 	if err != nil {
 		return "", fmt.Errorf("error marshaling request: %v", err)
 	}
 
-	// Create a HTTP post request
 	r, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
 	if err != nil {
 		return "", fmt.Errorf("error while creating request: %v", err)
@@ -68,21 +66,18 @@ func getHelmPath(usersRequest *User) (string, error) {
 	// Create a new tar command to untar the file
 	cmd := exec.Command("tar", "-xf", tarFilename)
 
-	// Set the working directory for the command (optional)
 	cmd.Dir = "./"
 
-	// Set the standard output and error for the command
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	// Run the command and wait for it to finish
 	if err := cmd.Run(); err != nil {
-		fmt.Printf("Error: %s\n", err)
+		os.Remove(tarFilename)
+		return "", fmt.Errorf("error: %s\n", err)
 	}
 
 	os.Remove(tarFilename)
 	return "./" + usersRequest.Name + "/helm", nil
-	// return response.PathToHelm, nil
 }
 
 func applyHelm(app *User, pathToHelm string) error {

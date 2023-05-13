@@ -24,5 +24,3 @@ COPY --from=deploy /usr/local/bin/kubectl /usr/local/bin
 
 EXPOSE 8085
 ENTRYPOINT ["./KubeManager"]
-
-          

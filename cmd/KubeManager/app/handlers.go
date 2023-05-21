@@ -62,7 +62,7 @@ func (a *App) initialDeployment(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	status := Response{
-		Message: "The application deployed successfully\nThe application is accessible at 35.240.30.15:" + usersRequest.Port,
+		Message: "The application deployed successfully\nThe application is accessible at 35.240.30.14:" + usersRequest.Port,
 		Port:    usersRequest.Port,
 	}
 	statusJson, err := json.Marshal(status)

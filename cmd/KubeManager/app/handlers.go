@@ -81,11 +81,15 @@ func (a *App) findAvailablePort() string {
 		fmt.Print(a.Ports)
 		fmt.Print(i)
 		if port == i {
+			fmt.Print(a.Ports)
+			fmt.Print(i)
 			i++
 		}
 	}
 
 	a.Ports = append(a.Ports, i)
+	fmt.Print(a.Ports)
+	fmt.Print(i)
 
 	return strconv.Itoa(i)
 }

@@ -16,6 +16,6 @@ type User struct {
 
 func NewApp() *App {
 	return &App{
-		Ports: []int{},
+		Ports: []int{31940},
 	}
 }

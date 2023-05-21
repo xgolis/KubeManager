@@ -82,8 +82,8 @@ func (a *App) findAvailablePort() string {
 		fmt.Print(i)
 		if port == i {
 			fmt.Print(a.Ports)
+			i = i + 1
 			fmt.Print(i)
-			i++
 		}
 	}
 

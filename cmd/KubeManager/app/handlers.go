@@ -77,19 +77,14 @@ func (a *App) initialDeployment(w http.ResponseWriter, req *http.Request) {
 func (a *App) findAvailablePort() string {
 	i := 31940
 
-	for port := range a.Ports {
-		fmt.Print(a.Ports)
-		fmt.Print(i)
+	for _, port := range a.Ports {
 		if port == i {
-			fmt.Print(a.Ports)
 			i = i + 1
-			fmt.Print(i)
 		}
 	}
 
 	a.Ports = append(a.Ports, i)
 	fmt.Print(a.Ports)
-	fmt.Print(i)
 
 	return strconv.Itoa(i)
 }

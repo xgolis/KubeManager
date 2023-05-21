@@ -78,6 +78,8 @@ func (a *App) findAvailablePort() string {
 	i := 31940
 
 	for port := range a.Ports {
+		fmt.Print(a.Ports)
+		fmt.Print(i)
 		if port == i {
 			i++
 		}
